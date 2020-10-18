@@ -56,7 +56,7 @@ namespace dotnet_rpg.Services.CharacterService
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
         {
             ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            List<Character> dbCharacters = await _context.Characters.ToListAsync();            
+            List<Character> dbCharacters = await _context.Characters.ToListAsync();
             serviceResponse.Data = (dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c))).ToList();
             return serviceResponse;
         }
@@ -74,13 +74,16 @@ namespace dotnet_rpg.Services.CharacterService
             ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto>();
             try
             {
-                Character character = characters.FirstOrDefault(c => c.Id == updateCharacterDto.Id);
+                Character character = _context.Characters.FirstOrDefault(c => c.Id == updateCharacterDto.Id);
                 character.Name = updateCharacterDto.Name;
                 character.HitPoints = updateCharacterDto.HitPoints;
                 character.Strength = updateCharacterDto.Strength;
                 character.Defense = updateCharacterDto.Defense;
                 character.Intelligence = updateCharacterDto.Intelligence;
                 character.Class = updateCharacterDto.Class;
+
+                _context.Characters.Update(character);
+                await _context.SaveChangesAsync();
 
                 serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
             }
