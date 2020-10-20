@@ -19,7 +19,7 @@ namespace dotnet_rpg.Data
             if(user  == null)
             {
                 response.Success = false;
-                response.Message =  "USer not found.";
+                response.Message =  "User not found.";
             }
             else if(!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)){
                 response.Success = false;
